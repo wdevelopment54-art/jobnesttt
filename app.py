@@ -150,3 +150,8 @@ def _seed_initial_data(app):
 if __name__ == "__main__":
     app = create_app()
     app.run(host="0.0.0.0", port=5000)
+
+
+# Module-level app instance for WSGI servers (e.g. PythonAnywhere's
+# default WSGI file does `from app import app as application`).
+app = create_app(os.environ.get("FLASK_ENV", "production"))

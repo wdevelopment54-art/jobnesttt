@@ -17,11 +17,9 @@ env/
 instance/*.db
 instance/*.sqlite3
 
-# Temp / diagnostic scripts
+# Temp / diagnostic scripts (files starting with an underscore)
 _*.py
 _test.txt
 
-# OS / editor
-.DS_Store
-Thumbs.db
-*.swp
+# Never ignore package markers
+!__init__.py

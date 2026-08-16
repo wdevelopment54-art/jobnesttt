@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/admin_sidebar.html" %}
+            <div class="dashboard-content">
+                <h3 class="text-navy mb-4">Legal Pages CMS</h3>
+                <div class="card shadow-sm"><div class="card-body">
+                    <form method="post" novalidate>
+                        {{ form.hidden_tag() }}
+                        <div class="row g-3">
+                            <div class="col-12">{{ form.privacy_title.label(class="form-label") }}{{ form.privacy_title(class="form-control" + (" is-invalid" if form.privacy_title.errors else "")) }}{% for e in form.privacy_title.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                            <div class="col-12">{{ form.privacy_content.label(class="form-label") }}{{ form.privacy_content(class="form-control" + (" is-invalid" if form.privacy_content.errors else ""), rows=8) }}{% for e in form.privacy_content.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                            <div class="col-12">{{ form.terms_title.label(class="form-label") }}{{ form.terms_title(class="form-control" + (" is-invalid" if form.terms_title.errors else "")) }}{% for e in form.terms_title.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                            <div class="col-12">{{ form.terms_content.label(class="form-label") }}{{ form.terms_content(class="form-control" + (" is-invalid" if form.terms_content.errors else ""), rows=8) }}{% for e in form.terms_content.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                        </div>
+                        <div class="mt-3"><button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Save Legal Pages</button></div>
+                    </form>
+                </div></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

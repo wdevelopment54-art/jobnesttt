@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/employer_sidebar.html" %}
+            <div class="dashboard-content">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <h3 class="text-navy mb-0">Applicants — {{ job.title }}</h3>
+                    <div class="btn-group" role="group">
+                        <a href="{{ url_for('employer.applicants', job_id=job.id) }}" class="btn btn-sm btn-{{ 'primary' if not status_filter else 'outline-primary' }}">All</a>
+                        {% for s in ['pending','reviewed','shortlisted','rejected','hired'] %}
+                        <a href="{{ url_for('employer.applicants', job_id=job.id, status=s) }}" class="btn btn-sm btn-{{ 'primary' if status_filter==s else 'outline-primary' }}">{{ s.title() }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% if apps %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light"><tr><th>Applicant</th><th>Status</th><th>Applied</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {% for a in apps %}
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">{{ a.applicant.full_name }}</div>
+                                    <div class="small text-muted">{{ a.applicant.email }}</div>
+                                </td>
+                                <td><span class="badge bg-{{ 'warning' if a.status=='pending' else ('info' if a.status=='reviewed' else ('success' if a.status in ('shortlisted','hired') else 'secondary')) }}">{{ a.status.title() }}</span></td>
+                                <td class="small text-muted">{{ a.created_at.strftime('%b %d, %Y') }}</td>
+                                <td><a href="{{ url_for('employer.view_application', app_id=a.id) }}" class="btn btn-sm btn-outline-primary">Review</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="card p-5 text-center"><div class="empty-state"><i class="fas fa-users"></i><h4>No applicants</h4><p>No one has applied for this job yet.</p></div></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

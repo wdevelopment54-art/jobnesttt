@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h4 class="text-navy mb-0">Apply for {{ job.title }}</h4>
+                        <small class="text-muted">{{ job.company.name if job.company else 'Company' }} &middot; {{ job.location }}</small>
+                    </div>
+                    <div class="card-body">
+                        {% if not current_user.profile or not current_user.profile.current_resume_id %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            You have not uploaded a resume yet. Please <a href="{{ url_for('seeker.resume') }}">upload your resume</a> first so employers can review it.
+                        </div>
+                        {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-paperclip me-1"></i>
+                            Your current resume will be attached to this application.
+                            <a href="{{ url_for('seeker.resume') }}">Manage resume</a>
+                        </div>
+                        {% endif %}
+
+                        <form method="post" novalidate>
+                            {{ form.hidden_tag() }}
+                            <div class="mb-3">
+                                {{ form.cover_letter.label(class="form-label") }}
+                                {{ form.cover_letter(class="form-control" + (" is-invalid" if form.cover_letter.errors else ""), rows=8, placeholder="Write a short message to the employer explaining why you're a great fit...") }}
+                                {% for e in form.cover_letter.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+                                <small class="text-muted">A thoughtful cover letter increases your chances.</small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-1"></i>Submit Application</button>
+                                <a href="{{ url_for('public.job_detail', slug=job.slug) }}" class="btn btn-outline-secondary">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/employer_sidebar.html" %}
+            <div class="dashboard-content">
+                <h3 class="text-navy mb-4">Company Profile</h3>
+                {% if company %}
+                <div class="alert alert-{{ 'success' if company.status=='approved' else ('warning' if company.status=='pending' else 'secondary') }}">
+                    Status: <strong>{{ company.status.title() }}</strong>
+                    {% if company.status != 'approved' %} — Visible to public only after admin approval.{% endif %}
+                </div>
+                {% endif %}
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data" novalidate>
+                            {{ form.hidden_tag() }}
+                            <div class="row g-3">
+                                <div class="col-md-6">{{ form.name.label(class="form-label") }}{{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}{% for e in form.name.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                                <div class="col-md-6">{{ form.industry.label(class="form-label") }}{{ form.industry(class="form-control" + (" is-invalid" if form.industry.errors else "")) }}{% for e in form.industry.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                                <div class="col-md-6">{{ form.website.label(class="form-label") }}{{ form.website(class="form-control" + (" is-invalid" if form.website.errors else "")) }}{% for e in form.website.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                                <div class="col-md-6">{{ form.email.label(class="form-label") }}{{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}{% for e in form.email.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                                <div class="col-md-6">{{ form.phone.label(class="form-label") }}{{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else "")) }}{% for e in form.phone.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                                <div class="col-md-6">{{ form.location.label(class="form-label") }}{{ form.location(class="form-control" + (" is-invalid" if form.location.errors else "")) }}{% for e in form.location.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                                <div class="col-md-6">{{ form.company_size.label(class="form-label") }}{{ form.company_size(class="form-control" + (" is-invalid" if form.company_size.errors else "")) }}{% for e in form.company_size.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                                <div class="col-md-6">{{ form.founded_year.label(class="form-label") }}{{ form.founded_year(class="form-control" + (" is-invalid" if form.founded_year.errors else "")) }}{% for e in form.founded_year.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                                <div class="col-12">{{ form.about.label(class="form-label") }}{{ form.about(class="form-control" + (" is-invalid" if form.about.errors else ""), rows=4) }}{% for e in form.about.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                                <div class="col-md-6">{{ form.logo.label(class="form-label") }}{{ form.logo(class="form-control" + (" is-invalid" if form.logo.errors else "")) }}{% for e in form.logo.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}{% if company and company.logo %}<div class="mt-2"><img src="{{ url_for('static', filename=company.logo) }}" alt="logo" style="height:48px;" class="rounded"></div>{% endif %}</div>
+                                <div class="col-md-3">{{ form.facebook.label(class="form-label") }}{{ form.facebook(class="form-control") }}</div>
+                                <div class="col-md-3">{{ form.instagram.label(class="form-label") }}{{ form.instagram(class="form-control") }}</div>
+                                <div class="col-md-3">{{ form.linkedin.label(class="form-label") }}{{ form.linkedin(class="form-control") }}</div>
+                                <div class="col-md-3">{{ form.twitter.label(class="form-label") }}{{ form.twitter(class="form-control") }}</div>
+                                <div class="col-md-6">{{ form.youtube.label(class="form-label") }}{{ form.youtube(class="form-control") }}</div>
+                            </div>
+                            <div class="mt-3"><button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Save Company</button></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

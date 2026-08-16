@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/seeker_sidebar.html" %}
+            <div class="dashboard-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="text-navy mb-0">Welcome, {{ current_user.full_name.split()[0] }}!</h2>
+                        <small class="text-muted">Here's your job search overview</small>
+                    </div>
+                </div>
+
+                <div class="card p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="text-navy mb-0">Profile Completion</h5>
+                        <span class="fw-bold text-teal">{{ completion }}%</span>
+                    </div>
+                    <div class="progress"><div class="progress-bar" style="width:{{ completion }}%"></div></div>
+                    {% if completion < 100 %}<a href="{{ url_for('seeker.profile') }}" class="btn btn-sm btn-outline-primary mt-3">Complete Your Profile</a>{% endif %}
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4"><div class="card stat-card"><div class="stat-number">{{ counts.total }}</div><div class="stat-label">Total Applications</div></div></div>
+                    <div class="col-md-4"><div class="card stat-card"><div class="stat-number text-warning">{{ counts.pending }}</div><div class="stat-label">Pending</div></div></div>
+                    <div class="col-md-4"><div class="card stat-card"><div class="stat-number text-teal">{{ counts.shortlisted }}</div><div class="stat-label">Shortlisted</div></div></div>
+                    <div class="col-md-4"><div class="card stat-card"><div class="stat-number text-purple" style="color:#8b5cf6">{{ counts.interview }}</div><div class="stat-label">Interview</div></div></div>
+                    <div class="col-md-4"><div class="card stat-card"><div class="stat-number text-success">{{ counts.accepted }}</div><div class="stat-label">Accepted</div></div></div>
+                    <div class="col-md-4"><div class="card stat-card"><div class="stat-number text-danger">{{ counts.rejected }}</div><div class="stat-label">Rejected</div></div></div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="card p-4">
+                            <h5 class="text-navy mb-3">Recent Applications</h5>
+                            {% if apps %}
+                                {% for app in apps[:5] %}
+                                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                                    <div><a href="{{ url_for('public.job_detail', slug=app.job.slug) }}" class="text-decoration-none text-navy fw-bold">{{ app.job.title }}</a>
+                                    <br><small class="text-muted">{{ app.job.company.name if app.job.company else '' }}</small></div>
+                                    <span class="badge badge-status status-{{ app.status }}">{{ app.status|title }}</span>
+                                </div>
+                                {% endfor %}
+                                <a href="{{ url_for('seeker.applications') }}" class="btn btn-sm btn-outline-primary mt-2">View All</a>
+                            {% else %}
+                                <p class="text-muted">No applications yet. <a href="{{ url_for('public.jobs') }}">Browse jobs</a></p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="text-navy mb-0">Notifications</h5>
+                                <span class="badge bg-light">{{ saved_count }} saved jobs</span>
+                            </div>
+                            {% if notifications %}
+                                {% for n in notifications %}
+                                <div class="notification-item {% if not n.is_read %}unread{% endif %}">
+                                    <div class="fw-bold small">{{ n.title }}</div>
+                                    <div class="small text-muted">{{ n.message }}</div>
+                                </div>
+                                {% endfor %}
+                                <a href="{{ url_for('seeker.notifications') }}" class="btn btn-sm btn-outline-primary mt-2">View All</a>
+                            {% else %}
+                                <p class="text-muted">No notifications.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

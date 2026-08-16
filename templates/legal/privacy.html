@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container"><h1 class="mb-0">Privacy Policy</h1></div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="card p-4">
+                    {{ settings.privacy_policy|nl2br or 'Our privacy policy will appear here.' }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

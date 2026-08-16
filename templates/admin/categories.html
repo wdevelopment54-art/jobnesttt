@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/admin_sidebar.html" %}
+            <div class="dashboard-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="text-navy mb-0">Categories</h3>
+                    <a href="{{ url_for('admin.add_category') }}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Add Category</a>
+                </div>
+                {% if categories %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light"><tr><th>Icon</th><th>Name</th><th>Description</th><th>Order</th><th>Active</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {% for c in categories %}
+                            <tr>
+                                <td>{% if c.icon %}<i class="{{ c.icon }}"></i>{% else %}<i class="fas fa-tag text-muted"></i>{% endif %}</td>
+                                <td class="fw-semibold">{{ c.name }}</td>
+                                <td class="small text-muted">{{ c.description|truncate(60) }}</td>
+                                <td>{{ c.sort_order }}</td>
+                                <td>{% if c.is_active %}<span class="badge bg-success">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</td>
+                                <td><div class="d-flex gap-1">
+                                    <a href="{{ url_for('admin.edit_category', cat_id=c.id) }}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
+                                    <form method="post" action="{{ url_for('admin.delete_category', cat_id=c.id) }}" onsubmit="return confirm('Delete category?');"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button></form>
+                                </div></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="card p-5 text-center"><div class="empty-state"><i class="fas fa-tags"></i><h4>No categories</h4><p>Add your first job category.</p></div></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

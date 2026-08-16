@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="mb-0">Contact Us</h1>
+        <p class="mb-0">We'd love to hear from you</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <div class="card p-4 h-100">
+                    <h4 class="text-navy mb-4">Get In Touch</h4>
+                    {% if settings.contact_phone %}<div class="mb-3"><i class="fas fa-phone me-2 text-primary"></i><a href="tel:{{ settings.contact_phone }}">{{ settings.contact_phone }}</a></div>{% endif %}
+                    {% if settings.contact_whatsapp %}<div class="mb-3"><i class="fab fa-whatsapp me-2 text-primary"></i><a href="https://wa.me/{{ settings.contact_whatsapp.replace('+','') }}" target="_blank">WhatsApp</a></div>{% endif %}
+                    {% if settings.contact_email %}<div class="mb-3"><i class="fas fa-envelope me-2 text-primary"></i><a href="mailto:{{ settings.contact_email }}">{{ settings.contact_email }}</a></div>{% endif %}
+                    {% if settings.contact_address %}<div class="mb-3"><i class="fas fa-map-marker-alt me-2 text-primary"></i>{{ settings.contact_address }}</div>{% endif %}
+                    {% if settings.business_hours %}<div class="mb-3"><i class="fas fa-clock me-2 text-primary"></i>{{ settings.business_hours }}</div>{% endif %}
+                    <div class="social-links mt-3">
+                        {% if settings.facebook %}<a href="{{ settings.facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
+                        {% if settings.instagram %}<a href="{{ settings.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
+                        {% if settings.linkedin %}<a href="{{ settings.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>{% endif %}
+                        {% if settings.youtube %}<a href="{{ settings.youtube }}" target="_blank"><i class="fab fa-youtube"></i></a>{% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="card p-4">
+                    <h4 class="text-navy mb-4">Send us a message</h4>
+                    <form method="post" action="{{ url_for('public.contact') }}">
+                        {{ form.hidden_tag() }}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                {{ form.name.label(class="form-label") }}
+                                {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+                                {% for e in form.name.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.email.label(class="form-label") }}
+                                {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+                                {% for e in form.email.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.phone.label(class="form-label") }}
+                                {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else "")) }}
+                                {% for e in form.phone.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.subject.label(class="form-label") }}
+                                {{ form.subject(class="form-control" + (" is-invalid" if form.subject.errors else "")) }}
+                                {% for e in form.subject.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+                            </div>
+                            <div class="col-12">
+                                {{ form.message.label(class="form-label") }}
+                                {{ form.message(class="form-control" + (" is-invalid" if form.message.errors else ""), rows=5) }}
+                                {% for e in form.message.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

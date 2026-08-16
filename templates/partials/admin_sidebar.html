@@ -1,0 +1,23 @@
+<div class="dashboard-sidebar card shadow-sm p-3">
+    <div class="text-center mb-3">
+        <div class="avatar-circle mx-auto" style="width:48px;height:48px;background:var(--navy);"><i class="fas fa-cog text-white"></i></div>
+        <div class="small text-muted mt-1">Admin Panel</div>
+    </div>
+    <ul class="nav flex-column gap-1">
+        <li><a class="nav-link {% if request.endpoint=='admin.dashboard' %}active{% endif %}" href="{{ url_for('admin.dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+        <li><a class="nav-link {% if request.endpoint=='admin.users' %}active{% endif %}" href="{{ url_for('admin.users') }}"><i class="fas fa-users me-2"></i>Users</a></li>
+        <li><a class="nav-link {% if request.endpoint=='admin.companies' %}active{% endif %}" href="{{ url_for('admin.companies') }}"><i class="fas fa-building me-2"></i>Companies</a></li>
+        <li><a class="nav-link {% if request.endpoint=='admin.jobs' %}active{% endif %}" href="{{ url_for('admin.jobs') }}"><i class="fas fa-briefcase me-2"></i>Jobs</a></li>
+        <li><a class="nav-link {% if request.endpoint=='admin.categories' %}active{% endif %}" href="{{ url_for('admin.categories') }}"><i class="fas fa-tags me-2"></i>Categories</a></li>
+        <li><a class="nav-link {% if request.endpoint=='admin.applications' %}active{% endif %}" href="{{ url_for('admin.applications') }}"><i class="fas fa-file-alt me-2"></i>Applications</a></li>
+        <li><a class="nav-link {% if request.endpoint=='admin.messages' %}active{% endif %}" href="{{ url_for('admin.messages') }}"><i class="fas fa-envelope me-2"></i>Messages</a></li>
+        <li><a class="nav-link {% if request.endpoint=='admin.banners' %}active{% endif %}" href="{{ url_for('admin.banners') }}"><i class="fas fa-image me-2"></i>Banners</a></li>
+        <li><a class="nav-link {% if request.endpoint=='admin.settings' %}active{% endif %}" href="{{ url_for('admin.settings') }}"><i class="fas fa-cogs me-2"></i>Settings</a></li>
+        <li><a class="nav-link {% if request.endpoint=='admin.homepage' %}active{% endif %}" href="{{ url_for('admin.homepage') }}"><i class="fas fa-home me-2"></i>Homepage</a></li>
+        <li><a class="nav-link {% if request.endpoint=='admin.about' %}active{% endif %}" href="{{ url_for('admin.about') }}"><i class="fas fa-info-circle me-2"></i>About</a></li>
+        <li><a class="nav-link {% if request.endpoint=='admin.legal' %}active{% endif %}" href="{{ url_for('admin.legal') }}"><i class="fas fa-balance-scale me-2"></i>Legal</a></li>
+        <li><a class="nav-link {% if request.endpoint=='admin.audit_logs' %}active{% endif %}" href="{{ url_for('admin.audit_logs') }}"><i class="fas fa-history me-2"></i>Audit Logs</a></li>
+        <li><a class="nav-link" href="{{ url_for('public.home') }}"><i class="fas fa-globe me-2"></i>View Site</a></li>
+        <li><a class="nav-link" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+    </ul>
+</div>

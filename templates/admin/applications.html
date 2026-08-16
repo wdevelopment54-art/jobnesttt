@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/admin_sidebar.html" %}
+            <div class="dashboard-content">
+                <h3 class="text-navy mb-4">Applications</h3>
+                <div class="btn-group mb-3" role="group">
+                    <a href="{{ url_for('admin.applications') }}" class="btn btn-sm btn-{{ 'primary' if not request.args.get('status') else 'outline-primary' }}">All</a>
+                    {% for s in ['pending','reviewed','shortlisted','rejected','hired'] %}
+                    <a href="{{ url_for('admin.applications', status=s) }}" class="btn btn-sm btn-{{ 'primary' if request.args.get('status')==s else 'outline-primary' }}">{{ s.title() }}</a>
+                    {% endfor %}
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light"><tr><th>Applicant</th><th>Job</th><th>Company</th><th>Status</th><th>Applied</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {% for a in applications %}
+                            <tr>
+                                <td class="fw-semibold">{{ a.applicant.full_name }}</td>
+                                <td class="small">{{ a.job.title }}</td>
+                                <td class="small">{{ a.job.company.name if a.job.company else '' }}</td>
+                                <td><span class="badge bg-{{ 'warning' if a.status=='pending' else ('info' if a.status=='reviewed' else ('success' if a.status in ('shortlisted','hired') else 'secondary')) }}">{{ a.status.title() }}</span></td>
+                                <td class="small text-muted">{{ a.created_at.strftime('%b %d, %Y') }}</td>
+                                <td><a href="{{ url_for('admin.view_application', app_id=a.id) }}" class="btn btn-sm btn-outline-primary">View</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% from "macros.html" import render_pagination %}
+                {{ render_pagination(pagination, 'admin.applications', status=request.args.get('status','')) }}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/admin_sidebar.html" %}
+            <div class="dashboard-content">
+                <h3 class="text-navy mb-4">Website Settings</h3>
+                <div class="card shadow-sm"><div class="card-body">
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {{ form.hidden_tag() }}
+                        <div class="row g-3">
+                            <div class="col-md-6">{{ form.site_name.label(class="form-label") }}{{ form.site_name(class="form-control" + (" is-invalid" if form.site_name.errors else "")) }}{% for e in form.site_name.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                            <div class="col-md-6">{{ form.tagline.label(class="form-label") }}{{ form.tagline(class="form-control" + (" is-invalid" if form.tagline.errors else "")) }}{% for e in form.tagline.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                            <div class="col-12">{{ form.meta_description.label(class="form-label") }}{{ form.meta_description(class="form-control" + (" is-invalid" if form.meta_description.errors else ""), rows=2) }}{% for e in form.meta_description.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                            <div class="col-md-6">{{ form.contact_email.label(class="form-label") }}{{ form.contact_email(class="form-control" + (" is-invalid" if form.contact_email.errors else "")) }}{% for e in form.contact_email.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                            <div class="col-md-6">{{ form.contact_phone.label(class="form-label") }}{{ form.contact_phone(class="form-control" + (" is-invalid" if form.contact_phone.errors else "")) }}{% for e in form.contact_phone.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                            <div class="col-md-6">{{ form.contact_address.label(class="form-label") }}{{ form.contact_address(class="form-control" + (" is-invalid" if form.contact_address.errors else "")) }}{% for e in form.contact_address.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                            <div class="col-md-6">{{ form.facebook.label(class="form-label") }}{{ form.facebook(class="form-control") }}</div>
+                            <div class="col-md-6">{{ form.instagram.label(class="form-label") }}{{ form.instagram(class="form-control") }}</div>
+                            <div class="col-md-6">{{ form.linkedin.label(class="form-label") }}{{ form.linkedin(class="form-control") }}</div>
+                            <div class="col-md-6">{{ form.twitter.label(class="form-label") }}{{ form.twitter(class="form-control") }}</div>
+                            <div class="col-md-6">{{ form.youtube.label(class="form-label") }}{{ form.youtube(class="form-control") }}</div>
+                            <div class="col-md-6">{{ form.logo.label(class="form-label") }}{{ form.logo(class="form-control" + (" is-invalid" if form.logo.errors else "")) }}{% for e in form.logo.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}{% if settings.logo %}<div class="mt-2"><img src="{{ url_for('static', filename=settings.logo) }}" style="height:40px;"></div>{% endif %}</div>
+                            <div class="col-md-6">{{ form.favicon.label(class="form-label") }}{{ form.favicon(class="form-control" + (" is-invalid" if form.favicon.errors else "")) }}{% for e in form.favicon.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}{% if settings.favicon %}<div class="mt-2"><img src="{{ url_for('static', filename=settings.favicon) }}" style="height:32px;"></div>{% endif %}</div>
+                            <div class="col-md-6">{{ form.footer_background.label(class="form-label") }}{{ form.footer_background(class="form-control" + (" is-invalid" if form.footer_background.errors else "")) }}{% for e in form.footer_background.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}{% if settings.footer_background %}<div class="mt-2"><img src="{{ url_for('static', filename=settings.footer_background) }}" style="height:40px;"></div>{% endif %}</div>
+                        </div>
+                        <div class="mt-3 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Save Settings</button>
+                            <form method="post" action="{{ url_for('admin.maintenance') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn btn-{{ 'danger' if not settings.maintenance_mode else 'success' }}">{{ 'Enable' if not settings.maintenance_mode else 'Disable' }} Maintenance</button></form>
+                        </div>
+                    </form>
+                </div></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

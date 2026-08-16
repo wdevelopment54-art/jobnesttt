@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('public.home') }}" class="text-white-50">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('public.jobs') }}" class="text-white-50">Jobs</a></li>
+                <li class="breadcrumb-item active text-white">{{ job.title }}</li>
+            </ol>
+        </nav>
+        <div class="d-flex flex-wrap align-items-center">
+            {% if job.company and job.company.logo %}
+                <img src="{{ url_for('static', filename=job.company.logo) }}" class="company-logo me-3" alt="{{ job.company.name }}">
+            {% else %}
+                <div class="company-logo me-3 d-flex align-items-center justify-content-center bg-white text-primary"><i class="fas fa-building"></i></div>
+            {% endif %}
+            <div>
+                <h1 class="mb-1">{{ job.title }}</h1>
+                <p class="mb-0"><i class="fas fa-building me-1"></i>
+                    <a href="{{ url_for('public.company_detail', slug=job.company.slug) if job.company else '#' }}" class="text-white-50 text-decoration-none">{{ job.company.name if job.company else 'Company' }}</a>
+                    {% if job.location %}<span class="ms-3"><i class="fas fa-map-marker-alt me-1"></i>{{ job.location }}</span>{% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card p-4 mb-4">
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        {% if job.salary_max %}<span class="badge salary-badge"><i class="fas fa-money-bill-wave me-1"></i>
+                            {% if job.salary_min %}{{ job.salary_min|format_currency }} - {% endif %}{{ job.salary_max|format_currency }} / {{ job.salary_type }}
+                        </span>{% endif %}
+                        <span class="badge bg-light text-dark"><i class="fas fa-briefcase me-1"></i>{{ job.employment_type.replace('_',' ')|title }}</span>
+                        <span class="badge bg-light text-dark"><i class="fas fa-chart-line me-1"></i>{{ job.experience_level|title }} Level</span>
+                        {% if job.category %}<span class="badge bg-light text-dark"><i class="fas fa-tag me-1"></i>{{ job.category.name }}</span>{% endif %}
+                        <span class="badge bg-light text-dark"><i class="fas fa-users me-1"></i>{{ job.vacancies }} Vacancies</span>
+                    </div>
+
+                    <h4 class="text-navy">Job Description</h4>
+                    <div class="mb-4">{{ job.description|nl2br }}</div>
+
+                    {% if job.responsibilities %}
+                    <h4 class="text-navy">Responsibilities</h4>
+                    <div class="mb-4">{{ job.responsibilities|nl2br }}</div>
+                    {% endif %}
+
+                    {% if job.requirements %}
+                    <h4 class="text-navy">Requirements</h4>
+                    <div class="mb-4">{{ job.requirements|nl2br }}</div>
+                    {% endif %}
+
+                    {% if job.skills %}
+                    <h4 class="text-navy">Skills</h4>
+                    <div class="mb-4">
+                        {% for skill in job.skills.split(',') %}<span class="skill-tag">{{ skill.strip() }}</span>{% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if job.benefits %}
+                    <h4 class="text-navy">Benefits</h4>
+                    <div>{{ job.benefits|nl2br }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card p-4 mb-3">
+                    <h5 class="text-navy mb-3">Job Overview</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="fas fa-calendar me-2 text-primary"></i>Posted: {{ job.created_at.strftime('%b %d, %Y') }}</li>
+                        {% if job.application_deadline %}<li class="mb-2"><i class="fas fa-hourglass-end me-2 text-primary"></i>Deadline: {{ job.application_deadline.strftime('%b %d, %Y') }}</li>{% endif %}
+                        <li class="mb-2"><i class="fas fa-eye me-2 text-primary"></i>{{ job.views }} views</li>
+                    </ul>
+                    <hr>
+                    {% if current_user.is_authenticated and current_user.is_seeker %}
+                        {% if applied %}
+                            <div class="alert alert-success mb-2"><i class="fas fa-check me-1"></i>Already Applied</div>
+                        {% elif job.can_apply %}
+                            <a href="{{ url_for('seeker.apply', job_id=job.id) }}" class="btn btn-primary w-100 mb-2">Apply Now</a>
+                        {% else %}
+                            <button class="btn btn-secondary w-100 mb-2" disabled>Applications Closed</button>
+                        {% endif %}
+                        <form action="{{ url_for('seeker.save_job', job_id=job.id) }}" method="post">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-bookmark me-1"></i>{% if saved %}Saved - Unsave{% else %}Save Job{% endif %}
+                            </button>
+                        </form>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-primary w-100 mb-2">Login to Apply</a>
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary w-100">Register</a>
+                    {% endif %}
+                </div>
+
+                {% if job.company %}
+                <div class="card p-4">
+                    <h5 class="text-navy mb-3">About Company</h5>
+                    {% if job.company.logo %}<img src="{{ url_for('static', filename=job.company.logo) }}" class="company-logo mb-3" alt="{{ job.company.name }}">{% endif %}
+                    <h6>{{ job.company.name }}</h6>
+                    <p class="text-muted small">{{ job.company.about[:200] if job.company.about else 'No description available.' }}</p>
+                    <a href="{{ url_for('public.company_detail', slug=job.company.slug) }}" class="btn btn-sm btn-outline-primary w-100">View Company</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if related %}
+        <h3 class="text-navy mt-5 mb-3">Related Jobs</h3>
+        <div class="row g-3">
+            {% for rjob in related %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card card-hover job-card">
+                    <div class="card-body">
+                        <a href="{{ url_for('public.job_detail', slug=rjob.slug) }}" class="job-title text-decoration-none">{{ rjob.title }}</a>
+                        <div class="job-meta mt-1"><i class="fas fa-building me-1"></i>{{ rjob.company.name if rjob.company else '' }}</div>
+                        <a href="{{ url_for('public.job_detail', slug=rjob.slug) }}" class="btn btn-sm btn-outline-primary mt-2">View</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

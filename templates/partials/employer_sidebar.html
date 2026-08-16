@@ -1,0 +1,20 @@
+<div class="dashboard-sidebar card shadow-sm p-3">
+    <div class="text-center mb-3">
+        {% if current_user.company and current_user.company.logo %}
+        <img src="{{ url_for('static', filename=current_user.company.logo) }}" alt="logo" class="rounded" style="height:48px;">
+        {% else %}
+        <div class="avatar-circle mx-auto" style="width:48px;height:48px;">{{ current_user.full_name[:1]|upper }}</div>
+        {% endif %}
+        <div class="small text-muted mt-1">{{ current_user.company.name if current_user.company else 'No Company' }}</div>
+    </div>
+    <ul class="nav flex-column gap-1">
+        <li><a class="nav-link {% if request.endpoint=='employer.dashboard' %}active{% endif %}" href="{{ url_for('employer.dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+        <li><a class="nav-link {% if request.endpoint=='employer.company_profile' %}active{% endif %}" href="{{ url_for('employer.company_profile') }}"><i class="fas fa-building me-2"></i>Company Profile</a></li>
+        <li><a class="nav-link {% if request.endpoint=='employer.post_job' %}active{% endif %}" href="{{ url_for('employer.post_job') }}"><i class="fas fa-plus me-2"></i>Post Job</a></li>
+        <li><a class="nav-link {% if request.endpoint=='employer.my_jobs' %}active{% endif %}" href="{{ url_for('employer.my_jobs') }}"><i class="fas fa-briefcase me-2"></i>My Jobs</a></li>
+        <li><a class="nav-link {% if request.endpoint=='employer.notifications' %}active{% endif %}" href="{{ url_for('employer.notifications') }}"><i class="fas fa-bell me-2"></i>Notifications</a></li>
+        <li><a class="nav-link" href="{{ url_for('auth.change_password') }}"><i class="fas fa-key me-2"></i>Change Password</a></li>
+        <li><a class="nav-link" href="{{ url_for('public.jobs') }}"><i class="fas fa-search me-2"></i>Browse Jobs</a></li>
+        <li><a class="nav-link" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+    </ul>
+</div>

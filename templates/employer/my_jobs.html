@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/employer_sidebar.html" %}
+            <div class="dashboard-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="text-navy mb-0">My Jobs</h3>
+                    <a href="{{ url_for('employer.post_job') }}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Post Job</a>
+                </div>
+                {% if jobs %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr><th>Title</th><th>Status</th><th>Applications</th><th>Posted</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for j in jobs %}
+                            <tr>
+                                <td><a href="{{ url_for('public.job_detail', slug=j.slug) }}" class="text-decoration-none fw-semibold">{{ j.title }}</a><div class="small text-muted">{{ j.location }}</div></td>
+                                <td><span class="badge bg-{{ 'success' if j.status=='published' else ('warning' if j.status in ('pending','draft') else 'secondary') }}">{{ j.status.title() }}</span></td>
+                                <td><a href="{{ url_for('employer.applicants', job_id=j.id) }}">{{ j.applications.count() }}</a></td>
+                                <td class="small text-muted">{{ j.created_at.strftime('%b %d, %Y') }}</td>
+                                <td>
+                                    <div class="d-flex gap-1 flex-wrap">
+                                        <a href="{{ url_for('employer.edit_job', job_id=j.id) }}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
+                                        <a href="{{ url_for('employer.applicants', job_id=j.id) }}" class="btn btn-sm btn-outline-info"><i class="fas fa-users"></i></a>
+                                        {% if j.status != 'closed' %}
+                                        <form method="post" action="{{ url_for('employer.close_job', job_id=j.id) }}" onsubmit="return confirm('Close this job?');">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-outline-warning"><i class="fas fa-lock"></i></button>
+                                        </form>
+                                        {% endif %}
+                                        <form method="post" action="{{ url_for('employer.delete_job', job_id=j.id) }}" onsubmit="return confirm('Delete this job permanently?');">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="card p-5 text-center"><div class="empty-state"><i class="fas fa-briefcase"></i><h4>No jobs yet</h4><p>Post your first job to attract candidates.</p><a href="{{ url_for('employer.post_job') }}" class="btn btn-primary">Post Job</a></div></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

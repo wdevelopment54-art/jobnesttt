@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/seeker_sidebar.html" %}
+            <div class="dashboard-content">
+                <div class="card p-4 mb-4">
+                    <h3 class="text-navy mb-4">Add Education</h3>
+                    <form method="post" action="{{ url_for('seeker.education') }}">
+                        {{ form.hidden_tag() }}
+                        <div class="row g-3">
+                            <div class="col-md-6">{{ form.institution.label(class="form-label") }}{{ form.institution(class="form-control" + (" is-invalid" if form.institution.errors else "")) }}{% for e in form.institution.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                            <div class="col-md-6">{{ form.degree.label(class="form-label") }}{{ form.degree(class="form-control") }}</div>
+                            <div class="col-md-6">{{ form.field.label(class="form-label") }}{{ form.field(class="form-control") }}</div>
+                            <div class="col-md-3">{{ form.start_date.label(class="form-label") }}{{ form.start_date(class="form-control") }}</div>
+                            <div class="col-md-3">{{ form.end_date.label(class="form-label") }}{{ form.end_date(class="form-control") }}</div>
+                            <div class="col-12">{{ form.description.label(class="form-label") }}{{ form.description(class="form-control", rows=3) }}</div>
+                            <div class="col-12"><button type="submit" class="btn btn-primary">Save Education</button></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card p-4">
+                    <h4 class="text-navy mb-3">Education History</h4>
+                    {% if items %}
+                    {% for item in items %}
+                    <div class="timeline-item">
+                        <div class="d-flex justify-content-between">
+                            <div><strong>{{ item.institution }}</strong>{% if item.degree %} — {{ item.degree }}{% endif %}
+                            <br><small class="text-muted">{{ item.field or '' }} | {{ item.start_date or '' }} - {{ item.end_date or '' }}</small></div>
+                            <form action="{{ url_for('seeker.delete_education', item_id=item.id) }}" method="post" style="display:inline;">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="Delete?"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </div>
+                        {% if item.description %}<p class="text-muted mt-1 mb-0">{{ item.description }}</p>{% endif %}
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="empty-state"><i class="fas fa-graduation-cap"></i><p>No education records yet.</p></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

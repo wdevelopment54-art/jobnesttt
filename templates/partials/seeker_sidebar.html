@@ -1,0 +1,27 @@
+<div class="sidebar">
+    <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+        {% if current_user.profile and current_user.profile.profile_photo %}
+            <img src="{{ url_for('static', filename=current_user.profile.profile_photo) }}" class="avatar-lg me-2" style="width:48px;height:48px;" alt="">
+        {% else %}
+            <i class="fas fa-user-circle fa-2x text-primary me-2"></i>
+        {% endif %}
+        <div>
+            <div class="fw-bold text-navy">{{ current_user.full_name }}</div>
+            <small class="text-muted">Job Seeker</small>
+        </div>
+    </div>
+    <ul class="nav flex-column">
+        <li><a class="nav-link {% if request.endpoint=='seeker.dashboard' %}active{% endif %}" href="{{ url_for('seeker.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a class="nav-link {% if request.endpoint=='seeker.profile' %}active{% endif %}" href="{{ url_for('seeker.profile') }}"><i class="fas fa-user"></i> My Profile</a></li>
+        <li><a class="nav-link {% if request.endpoint=='seeker.resume' %}active{% endif %}" href="{{ url_for('seeker.resume') }}"><i class="fas fa-file-alt"></i> Resume</a></li>
+        <li><a class="nav-link {% if request.endpoint=='seeker.education' %}active{% endif %}" href="{{ url_for('seeker.education') }}"><i class="fas fa-graduation-cap"></i> Education</a></li>
+        <li><a class="nav-link {% if request.endpoint=='seeker.experience' %}active{% endif %}" href="{{ url_for('seeker.experience') }}"><i class="fas fa-briefcase"></i> Experience</a></li>
+        <li><a class="nav-link {% if request.endpoint=='seeker.skills' %}active{% endif %}" href="{{ url_for('seeker.skills') }}"><i class="fas fa-cogs"></i> Skills</a></li>
+        <li><a class="nav-link {% if request.endpoint=='seeker.applications' %}active{% endif %}" href="{{ url_for('seeker.applications') }}"><i class="fas fa-paper-plane"></i> Applications</a></li>
+        <li><a class="nav-link {% if request.endpoint=='seeker.saved_jobs' %}active{% endif %}" href="{{ url_for('seeker.saved_jobs') }}"><i class="fas fa-bookmark"></i> Saved Jobs</a></li>
+        <li><a class="nav-link {% if request.endpoint=='seeker.notifications' %}active{% endif %}" href="{{ url_for('seeker.notifications') }}"><i class="fas fa-bell"></i> Notifications
+            {% if unread_notifications %}<span class="badge bg-danger rounded-pill ms-1">{{ unread_notifications }}</span>{% endif %}</a></li>
+        <li><a class="nav-link" href="{{ url_for('auth.change_password') }}"><i class="fas fa-key"></i> Change Password</a></li>
+        <li><a class="nav-link text-danger" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+</div>

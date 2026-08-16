@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% from "macros.html" import company_card, render_pagination %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="mb-0">Companies</h1>
+        <p class="mb-0">Explore {{ pagination.total }} top companies</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 mb-4">
+                <div class="card p-3">
+                    <h5 class="text-navy mb-3">Filter</h5>
+                    <form method="get" action="{{ url_for('public.companies') }}">
+                        <div class="mb-3">
+                            <label class="form-label">Search</label>
+                            <input type="text" name="keyword" class="form-control" value="{{ request.args.get('keyword','') }}" placeholder="Company name">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Industry</label>
+                            <select name="industry" class="form-select">
+                                <option value="">All Industries</option>
+                                {% for ind in industries %}
+                                <option value="{{ ind }}" {% if request.args.get('industry')==ind %}selected{% endif %}>{{ ind }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Apply</button>
+                        <a href="{{ url_for('public.companies') }}" class="btn btn-link w-100">Clear</a>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                {% if companies %}
+                <div class="row g-3">
+                    {% for company in companies %}
+                    <div class="col-lg-4 col-md-6">{{ company_card(company) }}</div>
+                    {% endfor %}
+                </div>
+                {{ render_pagination(pagination, 'public.companies', **request.args.to_dict()) }}
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-building"></i>
+                    <h4>No companies found</h4>
+                    <a href="{{ url_for('public.companies') }}" class="btn btn-primary">Clear Filters</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

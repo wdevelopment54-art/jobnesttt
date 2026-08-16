@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/admin_sidebar.html" %}
+            <div class="dashboard-content">
+                <h3 class="text-navy mb-4">Admin Dashboard</h3>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-primary"><i class="fas fa-users"></i></div><div><div class="stat-value">{{ stats.users }}</div><div class="stat-label">Users</div></div></div></div>
+                    <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-success"><i class="fas fa-building"></i></div><div><div class="stat-value">{{ stats.companies }}</div><div class="stat-label">Companies</div></div></div></div>
+                    <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-info"><i class="fas fa-briefcase"></i></div><div><div class="stat-value">{{ stats.jobs }}</div><div class="stat-label">Jobs</div></div></div></div>
+                    <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-warning"><i class="fas fa-file-alt"></i></div><div><div class="stat-value">{{ stats.applications }}</div><div class="stat-label">Applications</div></div></div></div>
+                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-success"><i class="fas fa-check"></i></div><div><div class="stat-value">{{ stats.active_jobs }}</div><div class="stat-label">Active Jobs</div></div></div></div>
+                    <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-warning"><i class="fas fa-clock"></i></div><div><div class="stat-value">{{ stats.pending_jobs }}</div><div class="stat-label">Pending Jobs</div></div></div></div>
+                    <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-danger"><i class="fas fa-inbox"></i></div><div><div class="stat-value">{{ stats.unread_messages }}</div><div class="stat-label">Unread Msgs</div></div></div></div>
+                    <div class="col-md-3"><div class="stat-card"><div class="stat-icon bg-secondary"><i class="fas fa-user-graduate"></i></div><div><div class="stat-value">{{ stats.seekers }}</div><div class="stat-label">Seekers</div></div></div></div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="card shadow-sm"><div class="card-header bg-white"><h6 class="mb-0 text-navy">Recent Users</h6></div>
+                            <div class="card-body p-0"><div class="list-group list-group-flush">
+                                {% for u in recent_users %}<div class="list-group-item"><div class="fw-semibold small">{{ u.full_name }}</div><div class="small text-muted">{{ u.email }} &middot; {{ u.role }}</div></div>{% endfor %}
+                            </div></div></div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card shadow-sm"><div class="card-header bg-white"><h6 class="mb-0 text-navy">Recent Jobs</h6></div>
+                            <div class="card-body p-0"><div class="list-group list-group-flush">
+                                {% for j in recent_jobs %}<div class="list-group-item"><div class="fw-semibold small">{{ j.title }}</div><div class="small text-muted">{{ j.company.name if j.company else '' }} &middot; {{ j.status }}</div></div>{% endfor %}
+                            </div></div></div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card shadow-sm"><div class="card-header bg-white"><h6 class="mb-0 text-navy">Recent Messages</h6></div>
+                            <div class="card-body p-0"><div class="list-group list-group-flush">
+                                {% for m in recent_messages %}<div class="list-group-item"><div class="fw-semibold small">{{ m.name }}</div><div class="small text-muted">{{ m.subject }}</div></div>{% endfor %}
+                            </div></div></div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <form method="post" action="{{ url_for('admin.maintenance') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-{{ 'danger' if not settings.maintenance_mode else 'success' }}">
+                            <i class="fas fa-tools me-1"></i>{{ 'Enable' if not settings.maintenance_mode else 'Disable' }} Maintenance Mode
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

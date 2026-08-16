@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/seeker_sidebar.html" %}
+            <div class="dashboard-content">
+                <div class="card p-4 mb-4">
+                    <h3 class="text-navy mb-4">Upload Resume</h3>
+                    <form method="post" action="{{ url_for('seeker.resume') }}" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ form.resume.label(class="form-label") }}
+                            {{ form.resume(class="form-control" + (" is-invalid" if form.resume.errors else "")) }}
+                            <div class="form-text">Allowed: PDF, DOC, DOCX. Max 10MB.</div>
+                            {% for e in form.resume.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload Resume</button>
+                    </form>
+                </div>
+
+                <div class="card p-4">
+                    <h4 class="text-navy mb-3">My Resumes</h4>
+                    {% if resumes %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead><tr><th>File</th><th>Size</th><th>Uploaded</th><th>Current</th><th>Action</th></tr></thead>
+                            <tbody>
+                                {% for r in resumes %}
+                                <tr>
+                                    <td><i class="fas fa-file-pdf text-danger me-2"></i>{{ r.original_filename or r.filename }}</td>
+                                    <td>{% if r.file_size %}{{ (r.file_size/1024)|round(1) }} KB{% else %}-{% endif %}</td>
+                                    <td>{{ r.uploaded_at.strftime('%b %d, %Y') }}</td>
+                                    <td>{% if current_user.profile and current_user.profile.current_resume_id==r.id %}<span class="badge bg-success">Current</span>{% endif %}</td>
+                                    <td>
+                                        <form action="{{ url_for('seeker.delete_resume', resume_id=r.id) }}" method="post" style="display:inline;">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="Delete this resume?"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="empty-state"><i class="fas fa-file-alt"></i><p>No resumes uploaded yet.</p></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

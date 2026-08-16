@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/seeker_sidebar.html" %}
+            <div class="dashboard-content">
+                <div class="card p-4 mb-4">
+                    <h3 class="text-navy mb-4">Add Skill</h3>
+                    <form method="post" action="{{ url_for('seeker.skills') }}" class="row g-3 align-items-end">
+                        {{ form.hidden_tag() }}
+                        <div class="col-md-5">{{ form.name.label(class="form-label") }}{{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}{% for e in form.name.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                        <div class="col-md-4">{{ form.level.label(class="form-label") }}{{ form.level(class="form-control") }}</div>
+                        <div class="col-md-3"><button type="submit" class="btn btn-primary w-100">Add Skill</button></div>
+                    </form>
+                </div>
+                <div class="card p-4">
+                    <h4 class="text-navy mb-3">My Skills</h4>
+                    {% if items %}
+                    <div>
+                        {% for item in items %}
+                        <span class="skill-tag d-inline-flex align-items-center">{{ item.name }} <small class="text-muted ms-1">({{ item.level }})</small>
+                            <form action="{{ url_for('seeker.delete_skill', item_id=item.id) }}" method="post" style="display:inline;">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm p-0 ms-1 text-danger" data-confirm="Delete?"><i class="fas fa-times"></i></button>
+                            </form>
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty-state"><i class="fas fa-cogs"></i><p>No skills added yet.</p></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

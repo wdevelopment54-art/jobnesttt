@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% from "macros.html" import job_card %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center">
+            {% if company.logo %}
+                <img src="{{ url_for('static', filename=company.logo) }}" class="company-logo me-3" style="width:80px;height:80px;" alt="{{ company.name }}">
+            {% else %}
+                <div class="company-logo me-3 d-flex align-items-center justify-content-center bg-white text-primary" style="width:80px;height:80px;"><i class="fas fa-building fa-lg"></i></div>
+            {% endif %}
+            <div>
+                <h1 class="mb-1">{{ company.name }}</h1>
+                <p class="mb-0">
+                    {% if company.industry %}<i class="fas fa-industry me-1"></i>{{ company.industry }}{% endif %}
+                    {% if company.location %}<span class="ms-3"><i class="fas fa-map-marker-alt me-1"></i>{{ company.location }}</span>{% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card p-4 mb-4">
+                    <h4 class="text-navy mb-3">About {{ company.name }}</h4>
+                    <p>{{ company.about or 'No description available.' }}</p>
+                    {% if company.founded_year or company.company_size %}
+                    <div class="row mt-3">
+                        {% if company.founded_year %}<div class="col-6"><strong>Founded:</strong> {{ company.founded_year }}</div>{% endif %}
+                        {% if company.company_size %}<div class="col-6"><strong>Size:</strong> {{ company.company_size }}</div>{% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <h3 class="text-navy mb-3">Open Positions ({{ jobs|length }})</h3>
+                {% if jobs %}
+                    {% for job in jobs %}{{ job_card(job) }}{% endfor %}
+                {% else %}
+                    <div class="empty-state"><i class="fas fa-briefcase"></i><h4>No open positions</h4></div>
+                {% endif %}
+            </div>
+            <div class="col-lg-4">
+                <div class="card p-4">
+                    <h5 class="text-navy mb-3">Contact</h5>
+                    <ul class="list-unstyled mb-0">
+                        {% if company.email %}<li class="mb-2"><i class="fas fa-envelope me-2 text-primary"></i><a href="mailto:{{ company.email }}">{{ company.email }}</a></li>{% endif %}
+                        {% if company.phone %}<li class="mb-2"><i class="fas fa-phone me-2 text-primary"></i><a href="tel:{{ company.phone }}">{{ company.phone }}</a></li>{% endif %}
+                        {% if company.website %}<li class="mb-2"><i class="fas fa-globe me-2 text-primary"></i><a href="{{ company.website }}" target="_blank" rel="noopener">Website</a></li>{% endif %}
+                    </ul>
+                    <div class="social-links mt-3">
+                        {% if company.facebook %}<a href="{{ company.facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
+                        {% if company.linkedin %}<a href="{{ company.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>{% endif %}
+                        {% if company.twitter %}<a href="{{ company.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

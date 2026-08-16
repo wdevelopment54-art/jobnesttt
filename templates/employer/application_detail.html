@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/employer_sidebar.html" %}
+            <div class="dashboard-content">
+                <a href="{{ url_for('employer.applicants', job_id=app.job_id) }}" class="btn btn-sm btn-link ps-0 mb-2"><i class="fas fa-arrow-left me-1"></i>Back to Applicants</a>
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0 text-navy">{{ app.applicant.full_name }}</h5>
+                                <span class="badge bg-{{ 'warning' if app.status=='pending' else ('info' if app.status=='reviewed' else ('success' if app.status in ('shortlisted','hired') else 'secondary')) }}">{{ app.status.title() }}</span>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small">{{ app.applicant.email }}{% if app.applicant.profile and app.applicant.profile.phone %} &middot; {{ app.applicant.profile.phone }}{% endif %}</p>
+                                {% if app.cover_letter %}<h6 class="text-navy">Cover Letter</h6><p>{{ app.cover_letter|nl2br }}</p>{% endif %}
+                                <div class="d-flex gap-2 mt-3">
+                                    {% if app.resume_id %}
+                                    <a href="{{ url_for('seeker.view_resume', resume_id=app.resume_id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-download me-1"></i>Download Resume</a>
+                                    {% endif %}
+                                    <a href="{{ url_for('seeker.candidate_profile', user_id=app.applicant_id) }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-user me-1"></i>Full Profile</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if app.history %}
+                        <div class="card shadow-sm mt-3">
+                            <div class="card-header bg-white"><h6 class="mb-0 text-navy">Status History</h6></div>
+                            <div class="card-body p-0">
+                                <ul class="list-group list-group-flush">
+                                    {% for h in app.history|sort(attribute='created_at', reverse=true) %}
+                                    <li class="list-group-item"><span class="badge bg-light text-dark border">{{ h.previous_status or '—' }} → {{ h.new_status }}</span> <small class="text-muted">{{ h.created_at.strftime('%b %d, %Y %I:%M %p') }}</small>{% if h.note %}<div class="small">{{ h.note }}</div>{% endif %}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white"><h6 class="mb-0 text-navy">Update Status</h6></div>
+                            <div class="card-body">
+                                <form method="post" novalidate>
+                                    {{ form.hidden_tag() }}
+                                    <div class="mb-3">{{ form.status.label(class="form-label") }}{{ form.status(class="form-select" + (" is-invalid" if form.status.errors else "")) }}{% for e in form.status.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                                    <div class="mb-3">{{ form.internal_notes.label(class="form-label") }}{{ form.internal_notes(class="form-control" + (" is-invalid" if form.internal_notes.errors else ""), rows=4, placeholder="Private notes (not visible to applicant)") }}{% for e in form.internal_notes.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}</div>
+                                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-save me-1"></i>Update</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

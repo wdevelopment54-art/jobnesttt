@@ -1,0 +1,77 @@
+{% macro job_card(job) %}
+<div class="card card-hover job-card mb-3">
+    <div class="card-body">
+        <div class="d-flex">
+            {% if job.company and job.company.logo %}
+                <img src="{{ url_for('static', filename=job.company.logo) }}" class="company-logo me-3" alt="{{ job.company.name }}">
+            {% else %}
+                <div class="company-logo me-3 d-flex align-items-center justify-content-center bg-light text-primary"><i class="fas fa-building"></i></div>
+            {% endif %}
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-start">
+                    <a href="{{ url_for('public.job_detail', slug=job.slug) }}" class="job-title text-decoration-none">{{ job.title }}</a>
+                    {% if job.is_featured %}<span class="badge bg-warning text-dark ms-2">Featured</span>{% endif %}
+                </div>
+                <div class="job-meta mt-1">
+                    <i class="fas fa-building me-1"></i>{{ job.company.name if job.company else 'Company' }}
+                    {% if job.location %}<span class="ms-3"><i class="fas fa-map-marker-alt me-1"></i>{{ job.location }}</span>{% endif %}
+                </div>
+                <div class="mt-2">
+                    {% if job.salary_max %}<span class="badge salary-badge me-2">
+                        {% if job.salary_min %}{{ job.salary_min|format_currency }} - {% endif %}{{ job.salary_max|format_currency }}/{{ job.salary_type[:1] }}
+                    </span>{% endif %}
+                    <span class="badge bg-light text-dark me-2">{{ job.employment_type.replace('_',' ')|title }}</span>
+                    <span class="badge bg-light text-dark">{{ job.experience_level|title }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+            <small class="text-muted"><i class="far fa-clock me-1"></i>{{ job.created_at.strftime('%b %d, %Y') }}</small>
+            <a href="{{ url_for('public.job_detail', slug=job.slug) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro company_card(company) %}
+<div class="card card-hover text-center p-3 mb-3">
+    {% if company.logo %}
+        <img src="{{ url_for('static', filename=company.logo) }}" class="company-logo mx-auto mb-3" alt="{{ company.name }}" style="width:70px;height:70px;">
+    {% else %}
+        <div class="company-logo mx-auto mb-3 d-flex align-items-center justify-content-center bg-light text-primary" style="width:70px;height:70px;"><i class="fas fa-building fa-lg"></i></div>
+    {% endif %}
+    <h6 class="mb-1"><a href="{{ url_for('public.company_detail', slug=company.slug) }}" class="text-decoration-none text-navy">{{ company.name }}</a></h6>
+    <small class="text-muted">{{ company.industry or 'Company' }}</small>
+    {% if company.location %}<div class="text-muted mt-1"><i class="fas fa-map-marker-alt me-1"></i>{{ company.location }}</div>{% endif %}
+    <a href="{{ url_for('public.company_detail', slug=company.slug) }}" class="btn btn-sm btn-outline-primary mt-3">View Jobs</a>
+</div>
+{% endmacro %}
+
+{% macro render_pagination(pagination, endpoint, status='', keyword='', read='', role='') %}
+{% if pagination.pages > 1 %}
+{% set args = {} %}
+{% if status %}{% set _ = args.update({'status': status}) %}{% endif %}
+{% if keyword %}{% set _ = args.update({'keyword': keyword}) %}{% endif %}
+{% if read %}{% set _ = args.update({'read': read}) %}{% endif %}
+{% if role %}{% set _ = args.update({'role': role}) %}{% endif %}
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if pagination.has_prev %}
+        <li class="page-item"><a class="page-link" href="{{ url_for(endpoint, page=pagination.prev_num, **args) }}">Previous</a></li>
+        {% endif %}
+        {% for page in pagination.iter_pages() %}
+            {% if page %}
+                <li class="page-item {% if page == pagination.page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for(endpoint, page=page, **args) }}">{{ page }}</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+        {% endfor %}
+        {% if pagination.has_next %}
+        <li class="page-item"><a class="page-link" href="{{ url_for(endpoint, page=pagination.next_num, **args) }}">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endmacro %}

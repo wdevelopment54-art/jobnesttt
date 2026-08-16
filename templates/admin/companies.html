@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/admin_sidebar.html" %}
+            <div class="dashboard-content">
+                <h3 class="text-navy mb-4">Companies</h3>
+                <div class="btn-group mb-3" role="group">
+                    <a href="{{ url_for('admin.companies') }}" class="btn btn-sm btn-{{ 'primary' if not request.args.get('status') else 'outline-primary' }}">All</a>
+                    {% for s in ['pending','approved','rejected','suspended'] %}
+                    <a href="{{ url_for('admin.companies', status=s) }}" class="btn btn-sm btn-{{ 'primary' if request.args.get('status')==s else 'outline-primary' }}">{{ s.title() }}</a>
+                    {% endfor %}
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light"><tr><th>Company</th><th>Employer</th><th>Status</th><th>Featured</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {% for c in companies %}
+                            <tr>
+                                <td>{% if c.logo %}<img src="{{ url_for('static', filename=c.logo) }}" style="height:28px;" class="rounded me-2">{% endif %}<span class="fw-semibold">{{ c.name }}</span></td>
+                                <td class="small">{{ c.employer.full_name if c.employer else '' }}</td>
+                                <td><span class="badge bg-{{ 'success' if c.status=='approved' else ('warning' if c.status=='pending' else 'secondary') }}">{{ c.status.title() }}</span></td>
+                                <td>{% if c.is_featured %}<i class="fas fa-star text-warning"></i>{% else %}<i class="far fa-star text-muted"></i>{% endif %}</td>
+                                <td><div class="d-flex gap-1 flex-wrap">
+                                    <a href="{{ url_for('admin.edit_company', company_id=c.id) }}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
+                                    <form method="post" action="{{ url_for('admin.company_feature', company_id=c.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-outline-warning"><i class="fas fa-star"></i></button></form>
+                                    <form method="post" action="{{ url_for('admin.company_delete', company_id=c.id) }}" onsubmit="return confirm('Delete company?');"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button></form>
+                                </div></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% from "macros.html" import render_pagination %}
+                {{ render_pagination(pagination, 'admin.companies', status=request.args.get('status','')) }}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

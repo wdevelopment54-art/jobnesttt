@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/seeker_sidebar.html" %}
+            <div class="dashboard-content">
+                <h3 class="text-navy mb-4">My Applications</h3>
+                {% if apps %}
+                <div class="row g-3">
+                    {% for app in apps %}
+                    <div class="col-12">
+                        <div class="card card-hover p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex">
+                                    {% if app.job.company and app.job.company.logo %}<img src="{{ url_for('static', filename=app.job.company.logo) }}" class="company-logo-sm me-3" alt="">{% else %}<div class="company-logo-sm me-3 d-flex align-items-center justify-content-center bg-light text-primary"><i class="fas fa-building"></i></div>{% endif %}
+                                    <div>
+                                        <a href="{{ url_for('public.job_detail', slug=app.job.slug) }}" class="fw-bold text-navy text-decoration-none">{{ app.job.title }}</a>
+                                        <div class="text-muted small">{{ app.job.company.name if app.job.company else '' }} • Applied {{ app.created_at.strftime('%b %d, %Y') }}</div>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge badge-status status-{{ app.status }}">{{ app.status|title }}</span>
+                                    <div class="small text-muted mt-1">Updated {{ app.status_updated_at.strftime('%b %d') if app.status_updated_at else '' }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="card p-5 text-center">
+                    <div class="empty-state"><i class="fas fa-paper-plane"></i><h4>No applications yet</h4><p>Start applying to jobs you love.</p><a href="{{ url_for('public.jobs') }}" class="btn btn-primary">Browse Jobs</a></div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

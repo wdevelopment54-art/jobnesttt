@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card shadow-sm text-center p-4 mb-4">
+                    <div class="avatar-circle mx-auto mb-3" style="width:96px;height:96px;font-size:2rem;">
+                        {{ user.full_name[:1]|upper }}
+                    </div>
+                    <h4 class="text-navy mb-1">{{ user.full_name }}</h4>
+                    <p class="text-muted mb-2">{{ profile.headline if profile and profile.headline else 'Job Seeker' }}</p>
+                    {% if profile %}
+                    <ul class="list-unstyled small text-muted mb-0">
+                        {% if profile.location %}<li><i class="fas fa-map-marker-alt me-1"></i>{{ profile.location }}</li>{% endif %}
+                        {% if profile.phone %}<li><i class="fas fa-phone me-1"></i>{{ profile.phone }}</li>{% endif %}
+                        <li><i class="fas fa-envelope me-1"></i>{{ user.email }}</li>
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <div class="card shadow-sm p-4 mb-4">
+                    <h5 class="text-navy">Skills</h5>
+                    {% if skills %}
+                    <div class="d-flex flex-wrap gap-2 mt-2">
+                        {% for s in skills %}<span class="badge bg-light text-dark border">{{ s.name }}</span>{% endfor %}
+                    </div>
+                    {% else %}<p class="text-muted small mb-0">No skills listed.</p>{% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card shadow-sm p-4 mb-4">
+                    <h5 class="text-navy">About</h5>
+                    {% if profile and profile.summary %}
+                    <p class="mb-0">{{ profile.summary|nl2br }}</p>
+                    {% else %}<p class="text-muted mb-0">No summary provided.</p>{% endif %}
+                </div>
+
+                <div class="card shadow-sm p-4 mb-4">
+                    <h5 class="text-navy">Experience</h5>
+                    {% if experiences %}
+                    <ul class="timeline mt-3">
+                        {% for e in experiences %}
+                        <li>
+                            <div class="fw-semibold">{{ e.position }}</div>
+                            <div class="text-muted small">{{ e.company }}{% if e.location %} &middot; {{ e.location }}{% endif %}</div>
+                            <div class="text-muted small">{{ e.start_date.strftime('%b %Y') if e.start_date else '' }} - {{ e.end_date.strftime('%b %Y') if e.end_date else 'Present' }}</div>
+                            {% if e.description %}<p class="small mt-1">{{ e.description|nl2br }}</p>{% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}<p class="text-muted mb-0">No experience listed.</p>{% endif %}
+                </div>
+
+                <div class="card shadow-sm p-4">
+                    <h5 class="text-navy">Education</h5>
+                    {% if educations %}
+                    <ul class="timeline mt-3">
+                        {% for ed in educations %}
+                        <li>
+                            <div class="fw-semibold">{{ ed.degree }}{% if ed.field_of_study %} in {{ ed.field_of_study }}{% endif %}</div>
+                            <div class="text-muted small">{{ ed.school }}{% if ed.location %} &middot; {{ ed.location }}{% endif %}</div>
+                            <div class="text-muted small">{{ ed.start_date.strftime('%b %Y') if ed.start_date else '' }} - {{ ed.end_date.strftime('%b %Y') if ed.end_date else 'Present' }}</div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}<p class="text-muted mb-0">No education listed.</p>{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

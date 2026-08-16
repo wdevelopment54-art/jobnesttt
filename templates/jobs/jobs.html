@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% from "macros.html" import job_card, render_pagination %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="mb-0">Browse Jobs</h1>
+        <p class="mb-0">Find {{ pagination.total }} job opportunities</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Filters -->
+            <div class="col-lg-3 mb-4">
+                <div class="card p-3">
+                    <h5 class="text-navy mb-3">Filter Jobs</h5>
+                    <form method="get" action="{{ url_for('public.jobs') }}">
+                        <div class="mb-3">
+                            <label class="form-label">Keyword</label>
+                            <input type="text" name="keyword" class="form-control" value="{{ request.args.get('keyword','') }}" placeholder="Title, skill...">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" name="location" class="form-control" value="{{ request.args.get('location','') }}" placeholder="City or country">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <select name="category" class="form-select">
+                                <option value="">All Categories</option>
+                                {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if request.args.get('category','')|string == cat.id|string %}selected{% endif %}>{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Employment Type</label>
+                            <select name="employment_type" class="form-select">
+                                <option value="">All Types</option>
+                                <option value="full_time" {% if request.args.get('employment_type')=='full_time' %}selected{% endif %}>Full Time</option>
+                                <option value="part_time" {% if request.args.get('employment_type')=='part_time' %}selected{% endif %}>Part Time</option>
+                                <option value="contract" {% if request.args.get('employment_type')=='contract' %}selected{% endif %}>Contract</option>
+                                <option value="internship" {% if request.args.get('employment_type')=='internship' %}selected{% endif %}>Internship</option>
+                                <option value="remote" {% if request.args.get('employment_type')=='remote' %}selected{% endif %}>Remote</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Experience Level</label>
+                            <select name="experience_level" class="form-select">
+                                <option value="">All Levels</option>
+                                <option value="entry" {% if request.args.get('experience_level')=='entry' %}selected{% endif %}>Entry</option>
+                                <option value="junior" {% if request.args.get('experience_level')=='junior' %}selected{% endif %}>Junior</option>
+                                <option value="mid" {% if request.args.get('experience_level')=='mid' %}selected{% endif %}>Mid</option>
+                                <option value="senior" {% if request.args.get('experience_level')=='senior' %}selected{% endif %}>Senior</option>
+                                <option value="lead" {% if request.args.get('experience_level')=='lead' %}selected{% endif %}>Lead</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                        <a href="{{ url_for('public.jobs') }}" class="btn btn-link w-100">Clear</a>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="col-lg-9">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted">{{ pagination.total }} results</span>
+                    <form method="get" action="{{ url_for('public.jobs') }}" class="d-flex align-items-center">
+                        {% for k,v in request.args.items() %}
+                            {% if k != 'sort' and k != 'page' %}<input type="hidden" name="{{ k }}" value="{{ v }}">{% endif %}
+                        {% endfor %}
+                        <label class="me-2 text-muted small">Sort:</label>
+                        <select name="sort" class="form-select form-select-sm" onchange="this.form.submit()">
+                            <option value="newest" {% if request.args.get('sort','newest')=='newest' %}selected{% endif %}>Newest</option>
+                            <option value="oldest" {% if request.args.get('sort')=='oldest' %}selected{% endif %}>Oldest</option>
+                            <option value="salary" {% if request.args.get('sort')=='salary' %}selected{% endif %}>Salary</option>
+                        </select>
+                    </form>
+                </div>
+
+                {% if jobs %}
+                    {% for job in jobs %}
+                        {{ job_card(job) }}
+                    {% endfor %}
+                    {{ render_pagination(pagination, 'public.jobs', **request.args.to_dict()) }}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h4>No jobs found</h4>
+                        <p>Try adjusting your search filters.</p>
+                        <a href="{{ url_for('public.jobs') }}" class="btn btn-primary">Clear Filters</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

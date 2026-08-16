@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="dashboard-layout">
+            {% include "partials/seeker_sidebar.html" %}
+            <div class="dashboard-content">
+                <div class="card p-4">
+                    <h3 class="text-navy mb-4">My Profile</h3>
+                    <form method="post" action="{{ url_for('seeker.profile') }}" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                {{ form.full_name.label(class="form-label") }}
+                                {{ form.full_name(class="form-control" + (" is-invalid" if form.full_name.errors else "")) }}
+                                {% for e in form.full_name.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.phone.label(class="form-label") }}
+                                {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else "")) }}
+                                {% for e in form.phone.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.city.label(class="form-label") }}
+                                {{ form.city(class="form-control") }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.country.label(class="form-label") }}
+                                {{ form.country(class="form-control") }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.professional_title.label(class="form-label") }}
+                                {{ form.professional_title(class="form-control") }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.profile_photo.label(class="form-label") }}
+                                {{ form.profile_photo(class="form-control", **{"data-preview":"#photoPreview"}) }}
+                                {% if profile and profile.profile_photo %}<img id="photoPreview" src="{{ url_for('static', filename=profile.profile_photo) }}" class="mt-2" style="width:80px;height:80px;border-radius:50%;object-fit:cover;display:block;">{% else %}<img id="photoPreview" style="display:none;width:80px;height:80px;border-radius:50%;object-fit:cover;" class="mt-2">{% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.linkedin.label(class="form-label") }}
+                                {{ form.linkedin(class="form-control") }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.portfolio.label(class="form-label") }}
+                                {{ form.portfolio(class="form-control") }}
+                            </div>
+                            <div class="col-12">
+                                {{ form.about_me.label(class="form-label") }}
+                                {{ form.about_me(class="form-control", rows=4) }}
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Save Profile</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

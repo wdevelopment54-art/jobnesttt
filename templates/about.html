@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="mb-0">{{ settings.about_heading or 'About JobNest' }}</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <p class="lead">{{ settings.about_intro or 'JobNest is a modern recruitment platform.' }}</p>
+            </div>
+        </div>
+        <div class="row g-4 mt-3">
+            <div class="col-md-4"><div class="card p-4 text-center h-100"><div class="feature-icon mx-auto"><i class="fas fa-bullseye"></i></div><h5 class="text-navy">Our Mission</h5><p class="text-muted">{{ settings.about_mission }}</p></div></div>
+            <div class="col-md-4"><div class="card p-4 text-center h-100"><div class="feature-icon mx-auto"><i class="fas fa-eye"></i></div><h5 class="text-navy">Our Vision</h5><p class="text-muted">{{ settings.about_vision }}</p></div></div>
+            <div class="col-md-4"><div class="card p-4 text-center h-100"><div class="feature-icon mx-auto"><i class="fas fa-heart"></i></div><h5 class="text-navy">Our Values</h5><p class="text-muted">{{ settings.about_values }}</p></div></div>
+        </div>
+        {% if settings.about_why_choose %}
+        <div class="row mt-4">
+            <div class="col-lg-8 mx-auto">
+                <div class="card p-4"><h5 class="text-navy">Why Choose Us</h5><p class="mb-0">{{ settings.about_why_choose|nl2br }}</p></div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="section bg-light-gray">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title">Our Platform in Numbers</h2>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-3"><div class="card stat-card"><div class="stat-number">{{ stats.jobs }}</div><div class="stat-label">Active Jobs</div></div></div>
+            <div class="col-md-3"><div class="card stat-card"><div class="stat-number">{{ stats.companies }}</div><div class="stat-label">Companies</div></div></div>
+            <div class="col-md-3"><div class="card stat-card"><div class="stat-number">{{ stats.seekers }}</div><div class="stat-label">Job Seekers</div></div></div>
+            <div class="col-md-3"><div class="card stat-card"><div class="stat-number">{{ stats.applications }}</div><div class="stat-label">Applications</div></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="cta-box cta-seeker text-center">
+            <h3>{{ settings.about_cta_heading or 'Ready to get started?' }}</h3>
+            <p>{{ settings.about_cta_text or 'Join JobNest today.' }}</p>
+            <a href="{{ settings.about_cta_url or url_for('auth.register') }}" class="btn btn-light">{{ settings.about_cta_button or 'Get Started' }}</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

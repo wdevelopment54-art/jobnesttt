@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% from "macros.html" import job_card, company_card, render_pagination %}
+
+{% block content %}
+{% if settings.show_hero %}
+<!-- Hero -->
+<section class="hero" {% if settings.hero_background %}style="background-image: linear-gradient(rgba(20,40,80,0.65), rgba(20,40,80,0.65)), url('{{ url_for('static', filename=settings.hero_background) }}'); background-size: cover; background-position: center;"{% endif %}>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1>{{ settings.hero_heading or 'Find Your Dream Job' }}</h1>
+                <p>{{ settings.hero_subtitle or 'Discover thousands of job opportunities with all the information you need.' }}</p>
+                <form class="hero-search" action="{{ url_for('public.jobs') }}" method="get">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="text" name="keyword" class="form-control" placeholder="Job title or keyword">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" name="location" class="form-control" placeholder="Location">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="category" class="form-select">
+                                <option value="">All Categories</option>
+                                {% for cat in categories %}
+                                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i>Search Jobs</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if settings.show_categories and categories %}
+<!-- Categories -->
+<section class="section">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title">{{ settings.categories_heading or 'Popular Categories' }}</h2>
+            <p class="section-subtitle">{{ settings.categories_subheading or 'Browse jobs by category' }}</p>
+        </div>
+        <div class="row g-3">
+            {% for cat in categories %}
+            <div class="col-lg-3 col-md-4 col-6">
+                <a href="{{ url_for('public.jobs', category=cat.id) }}" class="card card-hover text-center p-3 text-decoration-none">
+                    <div class="feature-icon mx-auto"><i class="fas fa-{{ cat.icon or 'briefcase' }}"></i></div>
+                    <h6 class="text-navy mb-0">{{ cat.name }}</h6>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if settings.show_featured_jobs and featured_jobs %}
+<section class="section bg-light-gray">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title">{{ settings.featured_jobs_heading or 'Featured Jobs' }}</h2>
+            <p class="section-subtitle">{{ settings.featured_jobs_subheading or 'Hand-picked opportunities' }}</p>
+        </div>
+        <div class="row g-3">
+            {% for job in featured_jobs %}
+            <div class="col-lg-4 col-md-6">{{ job_card(job) }}</div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('public.jobs') }}" class="btn btn-outline-primary">Browse All Jobs</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if settings.show_latest_jobs and latest_jobs %}
+<section class="section">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title">{{ settings.latest_jobs_heading or 'Latest Jobs' }}</h2>
+            <p class="section-subtitle">{{ settings.latest_jobs_subheading or 'Recently posted' }}</p>
+        </div>
+        <div class="row g-3">
+            {% for job in latest_jobs %}
+            <div class="col-lg-4 col-md-6">{{ job_card(job) }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if settings.show_featured_companies and featured_companies %}
+<section class="section bg-light-gray">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title">{{ settings.featured_companies_heading or 'Featured Companies' }}</h2>
+            <p class="section-subtitle">{{ settings.featured_companies_subheading or 'Trusted by leading organizations' }}</p>
+        </div>
+        <div class="row g-3">
+            {% for company in featured_companies %}
+            <div class="col-lg-3 col-md-4 col-6">{{ company_card(company) }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if settings.show_how_it_works %}
+<section class="section">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Get started in four simple steps</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3"><div class="step-card"><div class="step-icon">1</div><h5>Create Account</h5><p class="text-muted">Sign up as a job seeker or employer.</p></div></div>
+            <div class="col-md-3"><div class="step-card"><div class="step-icon">2</div><h5>Search Jobs</h5><p class="text-muted">Browse and filter thousands of roles.</p></div></div>
+            <div class="col-md-3"><div class="step-card"><div class="step-icon">3</div><h5>Apply</h5><p class="text-muted">Submit your application in minutes.</p></div></div>
+            <div class="col-md-3"><div class="step-card"><div class="step-icon">4</div><h5>Get Hired</h5><p class="text-muted">Connect with top employers.</p></div></div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if settings.show_statistics and stats %}
+<section class="section bg-light-gray">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title">{{ settings.statistics_heading or 'Our Platform in Numbers' }}</h2>
+            <p class="section-subtitle">{{ settings.statistics_subheading or 'Join thousands of professionals' }}</p>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-3"><div class="card stat-card"><div class="stat-number">{{ stats.jobs }}</div><div class="stat-label">Active Jobs</div></div></div>
+            <div class="col-md-3"><div class="card stat-card"><div class="stat-number">{{ stats.companies }}</div><div class="stat-label">Companies</div></div></div>
+            <div class="col-md-3"><div class="card stat-card"><div class="stat-number">{{ stats.seekers }}</div><div class="stat-label">Job Seekers</div></div></div>
+            <div class="col-md-3"><div class="card stat-card"><div class="stat-number">{{ stats.applications }}</div><div class="stat-label">Applications</div></div></div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if settings.show_cta %}
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="cta-box cta-seeker">
+                    <h3>{{ settings.cta_seeker_heading or 'Are You a Job Seeker?' }}</h3>
+                    <p>{{ settings.cta_seeker_text or 'Create a free account and apply to thousands of jobs.' }}</p>
+                    <a href="{{ settings.cta_seeker_url or url_for('auth.register') }}" class="btn btn-light">{{ settings.cta_seeker_button or 'Register' }}</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="cta-box cta-employer">
+                    <h3>{{ settings.cta_employer_heading or 'Are You an Employer?' }}</h3>
+                    <p>{{ settings.cta_employer_text or 'Post your jobs and find the best candidates.' }}</p>
+                    <a href="{{ settings.cta_employer_url or url_for('auth.register') }}" class="btn btn-light">{{ settings.cta_employer_button or 'Register' }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -349,8 +349,8 @@ class SiteSettings(db.Model):
 
     # Identity
     site_name = db.Column(db.String(150), default="JobNest")
-    logo = db.Column(db.String(255), nullable=True)
-    favicon = db.Column(db.String(255), nullable=True)
+    logo = db.Column(db.String(255), nullable=True, default="logos/jobnest_logo-removebg-preview.png")
+    favicon = db.Column(db.String(255), nullable=True, default="images/favicon.ico")
     site_description = db.Column(db.String(300), default="Find your dream job with JobNest.")
     tagline = db.Column(db.String(200), nullable=True)
     browser_title = db.Column(db.String(150), default="JobNest - Find Your Dream Job")
@@ -373,12 +373,12 @@ class SiteSettings(db.Model):
     # Footer
     footer_description = db.Column(db.String(400), default="JobNest connects talented professionals with great companies.")
     copyright_text = db.Column(db.String(200), default="© 2024 JobNest. All rights reserved.")
-    footer_background = db.Column(db.String(255), nullable=True)
+    footer_background = db.Column(db.String(255), nullable=True, default="banners/footer banner.webp")
 
     # Homepage CMS
     hero_title = db.Column(db.String(200), default="Find Your Dream Job")
     hero_subtitle = db.Column(db.String(400), default="Discover thousands of job opportunities with all the information you need. Its your future.")
-    hero_background = db.Column(db.String(255), nullable=True)
+    hero_background = db.Column(db.String(255), nullable=True, default="uploads/banners/header banner.webp")
     hero_cta_text = db.Column(db.String(100), default="Browse Jobs")
     hero_cta_url = db.Column(db.String(255), default="/jobs")
     hero_cta2_text = db.Column(db.String(100), default="Post a Job")

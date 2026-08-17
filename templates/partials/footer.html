@@ -1,4 +1,4 @@
-<footer class="site-footer"{% if settings and settings.footer_background %} style="background-image: linear-gradient(rgba(15,30,60,0.88), rgba(15,30,60,0.88)), url('{{ url_for('static', filename=settings.footer_background) }}'); background-size: cover; background-position: center;"{% endif %}>
+<footer class="site-footer"{% if settings and settings.footer_background %} style="background-image: linear-gradient(rgba(15,30,60,0.88), rgba(15,30,60,0.88)), url('{{ url_for('static', filename=settings.footer_background) }}'); background-size: cover; background-position: center;"{% else %} style="background-image: linear-gradient(rgba(15,30,60,0.88), rgba(15,30,60,0.88)), url('{{ url_for('static', filename='banners/footer banner.webp') }}'); background-size: cover; background-position: center;"{% endif %}>
     <div class="container">
         <div class="row g-4">
             <div class="col-lg-4 col-md-6">
@@ -6,7 +6,7 @@
                     {% if settings and settings.logo %}
                         <img src="{{ url_for('static', filename=settings.logo) }}" alt="{{ settings.site_name }}" class="footer-logo mb-3">
                     {% else %}
-                        <h4 class="text-white mb-3"><i class="fas fa-briefcase me-2"></i>{{ settings.site_name if settings else 'JobNest' }}</h4>
+                        <img src="{{ url_for('static', filename='logos/jobnest_logo-removebg-preview.png') }}" alt="{{ settings.site_name if settings else 'JobNest' }}" class="footer-logo mb-3">
                     {% endif %}
                     <p class="footer-desc">{{ settings.footer_description if settings else 'Find your dream job with JobNest.' }}</p>
                     <div class="social-links">

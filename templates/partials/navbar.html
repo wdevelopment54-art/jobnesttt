@@ -4,7 +4,7 @@
             {% if settings and settings.logo %}
                 <img src="{{ url_for('static', filename=settings.logo) }}" alt="{{ settings.site_name }}" class="brand-logo">
             {% else %}
-                <i class="fas fa-briefcase me-2"></i><span class="brand-text">{{ settings.site_name if settings else 'JobNest' }}</span>
+                <img src="{{ url_for('static', filename='logos/jobnest_logo-removebg-preview.png') }}" alt="{{ settings.site_name if settings else 'JobNest' }}" class="brand-logo">
             {% endif %}
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">

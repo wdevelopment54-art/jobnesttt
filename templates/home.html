@@ -4,7 +4,7 @@
 {% block content %}
 {% if settings.show_hero %}
 <!-- Hero -->
-<section class="hero" {% if settings.hero_background %}style="background-image: linear-gradient(rgba(20,40,80,0.65), rgba(20,40,80,0.65)), url('{{ url_for('static', filename=settings.hero_background) }}'); background-size: cover; background-position: center;"{% endif %}>
+<section class="hero" {% if settings.hero_background %}style="background-image: linear-gradient(rgba(20,40,80,0.65), rgba(20,40,80,0.65)), url('{{ url_for('static', filename=settings.hero_background) }}'); background-size: cover; background-position: center;"{% else %}style="background-image: linear-gradient(rgba(20,40,80,0.65), rgba(20,40,80,0.65)), url('{{ url_for('static', filename='uploads/banners/header banner.webp') }}'); background-size: cover; background-position: center;"{% endif %}>
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8 mx-auto text-center">

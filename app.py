@@ -1,6 +1,15 @@
 """Application factory for the Job Portal."""
 
 import os
+import sys
+
+# Ensure the project root is on sys.path so top-level packages like
+# `utils`, `models`, `forms`, and `routes` are importable regardless of how
+# the WSGI server (e.g. PythonAnywhere) sets up the path.
+_PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
+
 from flask import Flask, render_template, request, session
 from flask_login import LoginManager
 from dotenv import load_dotenv

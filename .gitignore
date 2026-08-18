@@ -21,5 +21,12 @@ instance/*.sqlite3
 _*.py
 _test.txt
 
+# Diagnostic / dump files (output of local test/debug runs)
+*.txt
+about.html
+admin_about.html
+dash.html
+login_page.html
+
 # Never ignore package markers
 !__init__.py

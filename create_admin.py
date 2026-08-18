@@ -6,11 +6,24 @@ Run on the server (PythonAnywhere Bash console) from the project root:
 
 It will create the admin user if it does not exist, or reset the
 password/email/role of an existing admin so you can always log in.
-Override the defaults with environment variables ADMIN_EMAIL and
-ADMIN_PASSWORD if you prefer custom credentials.
+Overrides the defaults with environment variables ADMIN_EMAIL and
+ADMIN_PASSWORD (loaded from the project's .env file if present).
 """
 
 import os
+import sys
+
+# Load .env from the project root explicitly. The Bash console CWD is usually
+# the project dir, but be explicit so ADMIN_EMAIL/ADMIN_PASSWORD from .env are
+# always picked up regardless of how this script is launched.
+_PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(_PROJECT_ROOT, ".env"))
+except ImportError:
+    pass
 
 from app import create_app
 from extensions import db

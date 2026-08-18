@@ -599,7 +599,14 @@ def about():
     settings = get_site_settings()
     form = AboutForm(obj=settings)
     if form.validate_on_submit():
+        # Capture the uploaded file before populate_obj overwrites the field
+        banner_file = form.about_banner.data
         form.populate_obj(settings)
+        # Preserve existing banner unless a new one is actually uploaded
+        if banner_file and hasattr(banner_file, "filename") and banner_file.filename:
+            delete_upload(settings.about_banner)
+            settings.about_banner = save_upload(
+                banner_file, "banners", Config.ALLOWED_IMAGE_EXTENSIONS)
         db.session.commit()
         flash("About page updated.", "success")
         return redirect(url_for("admin.about"))

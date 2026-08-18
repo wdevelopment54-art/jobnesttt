@@ -91,6 +91,9 @@ class AboutForm(FlaskForm):
     about_content = TextAreaField("Content", validators=[Optional()])
     about_mission = TextAreaField("Mission", validators=[Optional()])
     about_vision = TextAreaField("Vision", validators=[Optional()])
+    about_banner = FileField("About Page Banner", validators=[
+        FileAllowed(Config.ALLOWED_IMAGE_EXTENSIONS, "Images only.")
+    ])
     submit = SubmitField("Save About Page")
 
 

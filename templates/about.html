@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if settings.about_banner %}
+<section class="about-banner">
+    <img src="{{ url_for('static', filename=settings.about_banner) }}" alt="About JobNest" class="img-fluid w-100">
+</section>
+{% endif %}
 <section class="page-header">
     <div class="container">
         <h1 class="mb-0">{{ settings.about_heading or 'About JobNest' }}</h1>

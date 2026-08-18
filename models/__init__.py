@@ -6,6 +6,10 @@ from flask_login import UserMixin
 
 from extensions import db
 
+# Shared declarative base, used by app.py to introspect all tables/columns
+# for lightweight schema migrations (adding missing columns to existing DBs).
+Base = db.Model
+
 
 def slugify(text):
     import re
@@ -424,6 +428,7 @@ class SiteSettings(db.Model):
     about_cta_text = db.Column(db.String(300), default="Join JobNest today and take the next step in your career or hiring journey.")
     about_cta_button = db.Column(db.String(100), default="Get Started")
     about_cta_url = db.Column(db.String(255), default="/register")
+    about_banner = db.Column(db.String(255), nullable=True, default="uploads/banners/ABOUT BANNER.jpg")
 
     # Legal
     privacy_content = db.Column(db.Text, default="Our privacy policy will appear here.")
